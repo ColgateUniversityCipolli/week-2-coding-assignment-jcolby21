@@ -69,21 +69,20 @@ mid.points <- (left.points+right.points)/2
   \textbf{Solution:}
 <<size="scriptsize", warning=FALSE, message=FALSE>>=
 trap.midpoints = a + 1:99*(delta.x) #all the points excluding the two endpoints a and b
-trap.area = sum(0.5*(delta.x)*(integrand(a)+2*(integrand(trap.midpoints)+integrand(b)))) #trapezoidal rule formula
-trap.area  
+trap.area = sum(0.5 * delta.x * (integrand(a) + 2 * sum(integrand(trap.midpoints)) + integrand(b))) #trapezoidal rule formula
 @
   \item Write a function that takes \texttt{a}, \texttt{b}, and number of 
-  rectangles (\texttt{n.rect}) in as input and returns the Trapezoidial Rule 
+  rectangles (\texttt{n.rect}) in as input and returns the Trapezoidal Rule 
   by default, but can return left, right, or midpoint when necessary. Use the
   skeleton below. When you are done, remove \texttt{eval=FALSE} to show that
   the function provides the expected result for the example above.\\
   \textbf{Solution:}
-<<eval=FALSE, size="scriptsize", warning=FALSE, message=FALSE>>=
+<<size="scriptsize", warning=FALSE, message=FALSE>>=
 riemann.sums <- function(fnct,                        # function to integrate
                          a,                           # lower bound of integral
                          b,                           # upper bound of integral
                          n.rect,                      # number of  bound of integral
-                         method = "Trapezoidial"){    # method to use (trap by default)
+                         method = "Trapezoidal"){    # method to use (trap by default)
   ######################################
   # Check Input
   ######################################
@@ -100,13 +99,24 @@ riemann.sums <- function(fnct,                        # function to integrate
   # Compute Area
   ######################################
   if(method == "Left"){
-    # Add necessary code here
+    (delta.x <- (b-a)/n.rect)
+    left.points <- a + 0:(n.rect-1)*(delta.x)
+    (area <- sum(delta.x*(fnct(left.points))))
   }else if(method == "Right"){
-    # Add necessary code here
+    (delta.x <- (b-a)/n.rect)
+    right.points <- a + 1:(n.rect)*(delta.x)
+    (area <- sum(delta.x*(fnct(right.points))))
   }else if(method == "Midpoint"){
-    # Add necessary code here
-  }else if(method == "Trapezoidial"){
-    # Add necessary code here
+    (delta.x <- (b-a)/n.rect)
+    left.points <- a + 0:(n.rect-1)*(delta.x)
+    right.points <- a + 1:(n.rect)*(delta.x)
+    mid.points <- (left.points+right.points)/2
+    (area <- sum(delta.x*(fnct(mid.points))))
+  }else if(method == "Trapezoidal"){
+    (delta.x <- (b-a)/n.rect)
+    trap.midpoints = a + 1:(n.rect-1)*(delta.x) #all the points excluding the two endpoints a and b
+    area = sum(0.5 * delta.x * (fnct(a) + 2 * sum(fnct(trap.midpoints)) + fnct(b))) #formula for trapezoidal rule
+
   }else{
     stop("Please select a valid method (e.g., 'Left', 'Right', 'Midpoint', 'Trapezoidial')")
   }
@@ -121,7 +131,8 @@ riemann.sums <- function(fnct,                        # function to integrate
 riemann.sums(fnct = integrand,
              a = 0,
              b = 2,
-             n.rect = 100)
+             n.rect = 100,
+             method="Trapezoidal")
 ######################################
 # Compare to numerical integral
 ######################################

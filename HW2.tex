@@ -153,16 +153,12 @@ We can compute the area using the Midpoint Rule as follows.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hldef{trap.midpoints} \hlkwb{=} \hldef{a} \hlopt{+} \hlnum{1}\hlopt{:}\hlnum{99}\hlopt{*}\hldef{(delta.x)} \hlcom{#all the points excluding the two endpoints a and b}
-\hldef{trap.area} \hlkwb{=} \hlkwd{sum}\hldef{(}\hlnum{0.5}\hlopt{*}\hldef{(delta.x)}\hlopt{*}\hldef{(}\hlkwd{integrand}\hldef{(a)}\hlopt{+}\hlnum{2}\hlopt{*}\hldef{(}\hlkwd{integrand}\hldef{(trap.midpoints)}\hlopt{+}\hlkwd{integrand}\hldef{(b))))} \hlcom{#trapezoidal rule formula}
-\hldef{trap.area}
+\hldef{trap.area} \hlkwb{=} \hlkwd{sum}\hldef{(}\hlnum{0.5} \hlopt{*} \hldef{delta.x} \hlopt{*} \hldef{(}\hlkwd{integrand}\hldef{(a)} \hlopt{+} \hlnum{2} \hlopt{*} \hlkwd{sum}\hldef{(}\hlkwd{integrand}\hldef{(trap.midpoints))} \hlopt{+} \hlkwd{integrand}\hldef{(b)))} \hlcom{#trapezoidal rule formula}
 \end{alltt}
-\begin{verbatim}
-## [1] 13.5564
-\end{verbatim}
 \end{kframe}
 \end{knitrout}
   \item Write a function that takes \texttt{a}, \texttt{b}, and number of 
-  rectangles (\texttt{n.rect}) in as input and returns the Trapezoidial Rule 
+  rectangles (\texttt{n.rect}) in as input and returns the Trapezoidal Rule 
   by default, but can return left, right, or midpoint when necessary. Use the
   skeleton below. When you are done, remove \texttt{eval=FALSE} to show that
   the function provides the expected result for the example above.\\
@@ -174,7 +170,7 @@ We can compute the area using the Midpoint Rule as follows.
                          \hlkwc{a}\hldef{,}                           \hlcom{# lower bound of integral}
                          \hlkwc{b}\hldef{,}                           \hlcom{# upper bound of integral}
                          \hlkwc{n.rect}\hldef{,}                      \hlcom{# number of  bound of integral}
-                         \hlkwc{method} \hldef{=} \hlsng{"Trapezoidial"}\hldef{)\{}    \hlcom{# method to use (trap by default)}
+                         \hlkwc{method} \hldef{=} \hlsng{"Trapezoidal"}\hldef{)\{}    \hlcom{# method to use (trap by default)}
   \hlcom{######################################}
   \hlcom{# Check Input}
   \hlcom{######################################}
@@ -191,13 +187,24 @@ We can compute the area using the Midpoint Rule as follows.
   \hlcom{# Compute Area}
   \hlcom{######################################}
   \hlkwa{if}\hldef{(method} \hlopt{==} \hlsng{"Left"}\hldef{)\{}
-    \hlcom{# Add necessary code here}
+    \hldef{(delta.x} \hlkwb{<-} \hldef{(b}\hlopt{-}\hldef{a)}\hlopt{/}\hldef{n.rect)}
+    \hldef{left.points} \hlkwb{<-} \hldef{a} \hlopt{+} \hlnum{0}\hlopt{:}\hldef{(n.rect}\hlopt{-}\hlnum{1}\hldef{)}\hlopt{*}\hldef{(delta.x)}
+    \hldef{(area} \hlkwb{<-} \hlkwd{sum}\hldef{(delta.x}\hlopt{*}\hldef{(}\hlkwd{fnct}\hldef{(left.points))))}
   \hldef{\}}\hlkwa{else if}\hldef{(method} \hlopt{==} \hlsng{"Right"}\hldef{)\{}
-    \hlcom{# Add necessary code here}
+    \hldef{(delta.x} \hlkwb{<-} \hldef{(b}\hlopt{-}\hldef{a)}\hlopt{/}\hldef{n.rect)}
+    \hldef{right.points} \hlkwb{<-} \hldef{a} \hlopt{+} \hlnum{1}\hlopt{:}\hldef{(n.rect)}\hlopt{*}\hldef{(delta.x)}
+    \hldef{(area} \hlkwb{<-} \hlkwd{sum}\hldef{(delta.x}\hlopt{*}\hldef{(}\hlkwd{fnct}\hldef{(right.points))))}
   \hldef{\}}\hlkwa{else if}\hldef{(method} \hlopt{==} \hlsng{"Midpoint"}\hldef{)\{}
-    \hlcom{# Add necessary code here}
-  \hldef{\}}\hlkwa{else if}\hldef{(method} \hlopt{==} \hlsng{"Trapezoidial"}\hldef{)\{}
-    \hlcom{# Add necessary code here}
+    \hldef{(delta.x} \hlkwb{<-} \hldef{(b}\hlopt{-}\hldef{a)}\hlopt{/}\hldef{n.rect)}
+    \hldef{left.points} \hlkwb{<-} \hldef{a} \hlopt{+} \hlnum{0}\hlopt{:}\hldef{(n.rect}\hlopt{-}\hlnum{1}\hldef{)}\hlopt{*}\hldef{(delta.x)}
+    \hldef{right.points} \hlkwb{<-} \hldef{a} \hlopt{+} \hlnum{1}\hlopt{:}\hldef{(n.rect)}\hlopt{*}\hldef{(delta.x)}
+    \hldef{mid.points} \hlkwb{<-} \hldef{(left.points}\hlopt{+}\hldef{right.points)}\hlopt{/}\hlnum{2}
+    \hldef{(area} \hlkwb{<-} \hlkwd{sum}\hldef{(delta.x}\hlopt{*}\hldef{(}\hlkwd{fnct}\hldef{(mid.points))))}
+  \hldef{\}}\hlkwa{else if}\hldef{(method} \hlopt{==} \hlsng{"Trapezoidal"}\hldef{)\{}
+    \hldef{(delta.x} \hlkwb{<-} \hldef{(b}\hlopt{-}\hldef{a)}\hlopt{/}\hldef{n.rect)}
+    \hldef{trap.midpoints} \hlkwb{=} \hldef{a} \hlopt{+} \hlnum{1}\hlopt{:}\hldef{(n.rect}\hlopt{-}\hlnum{1}\hldef{)}\hlopt{*}\hldef{(delta.x)} \hlcom{#all the points excluding the two endpoints a and b}
+    \hldef{area} \hlkwb{=} \hlkwd{sum}\hldef{(}\hlnum{0.5} \hlopt{*} \hldef{delta.x} \hlopt{*} \hldef{(}\hlkwd{fnct}\hldef{(a)} \hlopt{+} \hlnum{2} \hlopt{*} \hlkwd{sum}\hldef{(}\hlkwd{fnct}\hldef{(trap.midpoints))} \hlopt{+} \hlkwd{fnct}\hldef{(b)))} \hlcom{#formula for trapezoidal rule}
+
   \hldef{\}}\hlkwa{else}\hldef{\{}
     \hlkwd{stop}\hldef{(}\hlsng{"Please select a valid method (e.g., 'Left', 'Right', 'Midpoint', 'Trapezoidial')"}\hldef{)}
   \hldef{\}}
@@ -212,7 +219,13 @@ We can compute the area using the Midpoint Rule as follows.
 \hlkwd{riemann.sums}\hldef{(}\hlkwc{fnct} \hldef{= integrand,}
              \hlkwc{a} \hldef{=} \hlnum{0}\hldef{,}
              \hlkwc{b} \hldef{=} \hlnum{2}\hldef{,}
-             \hlkwc{n.rect} \hldef{=} \hlnum{100}\hldef{)}
+             \hlkwc{n.rect} \hldef{=} \hlnum{100}\hldef{,}
+             \hlkwc{method}\hldef{=}\hlsng{"Trapezoidal"}\hldef{)}
+\end{alltt}
+\begin{verbatim}
+## [1] 8.6664
+\end{verbatim}
+\begin{alltt}
 \hlcom{######################################}
 \hlcom{# Compare to numerical integral}
 \hlcom{######################################}
@@ -220,6 +233,9 @@ We can compute the area using the Midpoint Rule as follows.
           \hlkwc{lower} \hldef{=} \hlnum{0}\hldef{,}     \hlcom{# that completes numerical}
           \hlkwc{upper} \hldef{=} \hlnum{2}\hldef{)}     \hlcom{# integration}
 \end{alltt}
+\begin{verbatim}
+## 8.666667 with absolute error < 9.8e-14
+\end{verbatim}
 \end{kframe}
 \end{knitrout}
 \end{enumerate}
